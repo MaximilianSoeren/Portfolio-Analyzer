@@ -16,17 +16,14 @@ body {
 }
 </style>
 """
-buffer = imports.st.checkbox('click here to Toggle')
-if buffer:
-    imports.st.markdown(darkmode, unsafe_allow_html=True)
-imports.st.header("Theme will change")
+imports.st.markdown(darkmode, unsafe_allow_html=True)
 
 # importing CSV and reading it
 expander = imports.st.beta_expander()
 with expander:
     uploaded_file = imports.st.file_uploader("", type=".csv", key=123)
 try:
-    df = classes.Data_Frame_Consors(
+    df = Data_Frame_Consors(
         imports.pd.read_csv(uploaded_file,
                             sep=';',
                             thousands='.',
