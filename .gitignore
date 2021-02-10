@@ -1,0 +1,11 @@
+# created by virtualenv automatically
+.idea
+Data
+etc
+Lib
+Scripts
+share
+_pychache_
+pyvenv.cfg
+
+
