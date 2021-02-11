@@ -4,7 +4,7 @@ taken from your depot. And will allow you to interact and explore said data in d
 """
 # Importing all modules / files we need
 import imports
-import functions
+import functions as fc
 
 from classes import Data_Frame_Consors
 
@@ -19,18 +19,28 @@ body {
 imports.st.markdown(darkmode, unsafe_allow_html=True)
 
 # importing CSV and reading it
-expander = imports.st.beta_expander()
+expander = imports.st.beta_expander(label="Upload")
 with expander:
     uploaded_file = imports.st.file_uploader("", type=".csv", key=123)
-try:
-    df = Data_Frame_Consors(
-        imports.pd.read_csv(uploaded_file,
-                            sep=';',
-                            thousands='.',
-                            decimal=',',
-                            encoding='utf-8'))
-except:
-    print("Bitte lade eine CSV Datei hoch.")
+    if imports.st.button("IGN", key=1):
+        try:
+            fc.reading_csv_ing(uploaded_file)
+        except:
+            bank = 'Consors'
+            print("Bitte lade eine CSV Datei von ING hoch.")
+    if imports.st.button("CONSORS", key=2):
+        try:
+            fc.reading_csv_consors(uploaded_file)
+        except:
+            bank = 'Consors'
+            print("Bitte lade eine CSV Datei von Consors hoch.")
+    if imports.st.button("COMDIRECT", key=3):
+        try:
+            fc.reading_csv_comdirect(uploaded_file)
+        except:
+            bank = 'Consors'
+            print("Bitte lade eine CSV Datei von Comdirect hoch.")
+    uploaded_file = imports.st.file_uploader("", type=".csv", key=123)
 
 # Defining the structure of the website
 header = imports.st.beta_container()
@@ -53,13 +63,12 @@ with header:
 with features1:
     col1, col2, col3 = imports.st.beta_columns(3)
     col1.header("Portfolioname")
-    col1.subheader((functions.no_header_no_index(df.get_depot_name())))
+    col1.subheader((fc.no_header_no_index(df.get_depot_name())))
     col2.header("Gesamtdepotwert")
-    col2.subheader(functions.no_header_no_index(df.get_depot_value()) + " €")
+    col2.subheader(fc.no_header_no_index(df.get_depot_value()) + " €")
     col3.header("Entwicklung Absolut / %")
-    col3.subheader(
-        (functions.no_header_no_index(df.get_depot_dev_abs()) + " € | " +
-         functions.no_header_no_index(df.get_depot_dev_per()) + " %"))
+    col3.subheader((fc.no_header_no_index(df.get_depot_dev_abs()) + " € | " +
+                    fc.no_header_no_index(df.get_depot_dev_per()) + " %"))
     imports.st.write("---")
 #     # ----------------------------------------------------------------------------------------------------------------------
 #     # display functions for best / worst stock
@@ -67,16 +76,16 @@ with features2:
     col4, col5 = imports.st.beta_columns(2)
     best_share = col4.beta_expander("Beste Aktie")
     with best_share:
-        imports.st.subheader((functions.no_header_no_index(
-            classes.get_best_position_absolute())))
         imports.st.subheader(
-            (functions.no_header_no_index(df.get_best_position_percentage())))
+            (fc.no_header_no_index(classes.get_best_position_absolute())))
+        imports.st.subheader(
+            (fc.no_header_no_index(df.get_best_position_percentage())))
     worst_share = col5.beta_expander("Schlechteste Aktie")
     with worst_share:
         imports.st.subheader(
-            (functions.no_header_no_index(get_worst_position_absolute())))
+            (fc.no_header_no_index(get_worst_position_absolute())))
         imports.st.subheader(
-            (functions.no_header_no_index(get_worst_position_percentage())))
+            (fc.no_header_no_index(get_worst_position_percentage())))
     col4.write("---")
     col5.write('---')
 with features3:
