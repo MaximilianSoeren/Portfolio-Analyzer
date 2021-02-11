@@ -12,22 +12,18 @@ def reading_csv_consors(csv):
                             encoding='utf-8'))
     return df
 
+
 def reading_csv_ing(csv):
     df = cl.Data_Frame_Consors(
-        imports.pd.read_csv(csv,
-                            sep=';',
-                            skiprows=5,
-                            encoding='utf-8'))
+        imports.pd.read_csv(csv, sep=';', skiprows=5, encoding='utf-8'))
     return df
 
 
 def reading_csv_comdirect(csv):
-     df = cl.Data_Frame_Consors(
-        imports.pd.read_csv(csv,
-                            sep=';',
-                            skiprows=1,
-                            encoding='utf-8'))
+    df = cl.Data_Frame_Consors(
+        imports.pd.read_csv(csv, sep=';', skiprows=1, encoding='utf-8'))
     return df
+
 
 # This will delete the header and index of said dataframe AND convert it to a string.
 def no_header_no_index(df):
@@ -53,15 +49,14 @@ def turn_str_into_float_single_datapoint(func, col):
 
 
 #this will turn a column of the dataframe into float type.
-def turn_str_into_float(col):
-    global df
-    df1 = replace_header_w_first_row(
-        classes.Data_Frame_Consors.get_for_sorting())
-    df2 = df1[col].apply(lambda x: x.replace('.', ''))
-    df2 = df2.apply(lambda x: x.replace(',', '.'))
-    df1[col] = df2
-    df1[col] = df1[col].astype(float)
-    return df1[col]
+# def turn_str_into_float(col):
+#     df1 = replace_header_w_first_row(
+#         classes.Data_Frame_Consors.get_for_sorting())
+#     df2 = df1[col].apply(lambda x: x.replace('.', ''))
+#     df2 = df2.apply(lambda x: x.replace(',', '.'))
+#     df1[col] = df2
+#     df1[col] = df1[col].astype(float)
+#     return df1[col]
 
 
 def Data_Frame_Consors():
