@@ -16,7 +16,7 @@ def reading_csv_ing(csv):
     df = cl.Data_Frame_Consors(
         imports.pd.read_csv(csv,
                             sep=';',
-                            skiprows=5
+                            skiprows=5,
                             encoding='utf-8'))
     return df
 
