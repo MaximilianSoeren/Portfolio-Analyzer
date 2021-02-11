@@ -40,7 +40,6 @@ with expander:
         except:
             bank = 'Consors'
             print("Bitte lade eine CSV Datei von Comdirect hoch.")
-    uploaded_file = imports.st.file_uploader("", type=".csv", key=123)
 
 # Defining the structure of the website
 header = imports.st.beta_container()
