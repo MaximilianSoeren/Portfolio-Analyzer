@@ -25,7 +25,7 @@ def reading_csv_comdirect(csv):
      df = cl.Data_Frame_Consors(
         imports.pd.read_csv(csv,
                             sep=';',
-                            skiprows=1
+                            skiprows=1,
                             encoding='utf-8'))
     return df
 
