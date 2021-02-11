@@ -21,20 +21,23 @@ imports.st.markdown(darkmode, unsafe_allow_html=True)
 # importing CSV and reading it
 expander = imports.st.beta_expander(label="Upload")
 with expander:
-    uploaded_file = imports.st.file_uploader("", type=".csv", key=123)
+
     if imports.st.button("IGN", key=1):
+        uploaded_file = imports.st.file_uploader("", type=".csv", key=1)
         try:
             fc.reading_csv_ing(uploaded_file)
         except:
             bank = 'Consors'
             print("Bitte lade eine CSV Datei von ING hoch.")
     if imports.st.button("CONSORS", key=2):
+        uploaded_file = imports.st.file_uploader("", type=".csv", key=2)
         try:
             fc.reading_csv_consors(uploaded_file)
         except:
             bank = 'Consors'
             print("Bitte lade eine CSV Datei von Consors hoch.")
     if imports.st.button("COMDIRECT", key=3):
+        uploaded_file = imports.st.file_uploader("", type=".csv", key=3)
         try:
             fc.reading_csv_comdirect(uploaded_file)
         except:
