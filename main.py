@@ -279,7 +279,7 @@ def get_ing_df_to_merge():
 def get_comdirect_to_merge():
     df1 = Data_Frame_Comdirect.get_for_sorting(df_comdirect)
     # df1_header = df1.rename(columns=df1.iloc[0]).drop(df1.index[0])
-    df1_com = df1.drop(columns=[ "Kaufwert in EUR", "Währung", "Notizen", "Diff. abs", "Diff. %", "Kaufkurs in EUR", "Datum",  "Zeit"], axis=1)
+    df1_com = df1.drop(columns=[ "Kaufwert in EUR", "Währung", "Notizen", "Diff. abs", "Diff. %", "Kaufkurs in EUR", "Datum",  "Zeit", "Unnamed: 17"], axis=1)
     df1_com = df1_com.dropna()
     df_to_merge_comdirect = df1_com.rename(columns={"WKN": "WKN/ISIN", "Typ": "Art", "Stück/Nom.": "Stück", "Akt. Kurs": "Stückpreis", "Wert in EUR": "Gesamtwert",
                                          "Diff. abs.1": "Entwicklung Absolut", "Diff. %.1": "Entwicklung Prozentual", "Bezeichnung": "Name", "Börse": "Handelsplatz"})
