@@ -9,6 +9,7 @@ import os
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly as pl
 #----------------------here are all classes defined that are used-----------------------------------
 
 
@@ -371,10 +372,10 @@ def get_growth_per_total():
 # This function creates a piec_chart that shows the % of each position based on the value of that position compared to the total value
 def pie_position_dist_per():
     df_float = make_column_into_float(join_all_df())
-    df_float.loc[df_float['Gesamtwert'] < 0.1, 'Name'] = "Other"
+    a = df_float['Gesamtwert'] / sum(df_float["Gesamtwert"])
+    df_float.loc[a < 0.01, 'Name'] = "Other"
     fig = px.pie(df_float, values="Gesamtwert", names="Name")
     return fig
-
 
 
 
@@ -492,8 +493,16 @@ if comdirect and not ing and consors:
 
 #------------here we define the rest of the programm----------------------
 
+# st.write(df_consors)
+# st.write(df_ign)
+# st.write(df_comdirect)
+
 # st.write(get_consors_df_to_merge())
 # st.write(get_ing_df_to_merge())
 # st.write(get_comdirect_to_merge())
-st.write(make_column_into_float(join_all_df()))
+# st.write(make_column_into_float(join_all_df()))
 # st.header(get_total_value_portfolio(make_column_into_float(get_comdirect_to_merge())))
+# st.write(Data_Frame_Consors.get_for_sorting(df_consors))
+# st.write(Data_Frame_ING.get_for_sorting(df_ign))
+# st.write(Data_Frame_Comdirect.get_for_sorting(df_comdirect))
+
