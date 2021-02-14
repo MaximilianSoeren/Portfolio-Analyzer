@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import plotly as pl
 #----------------------here are all classes defined that are used-----------------------------------
-st.beta_set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 # Defining the classes for the different Dataframes of each CSV that is uploaded
 
 class Data_Frame_Consors:
