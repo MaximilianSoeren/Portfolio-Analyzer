@@ -12,165 +12,14 @@ import plotly.express as px
 import plotly as pl
 #----------------------here are all classes defined that are used-----------------------------------
 
-
+# Defining the classes for the different Dataframes of each CSV that is uploaded
 
 class Data_Frame_Consors:
     def __init__(self, new_df):
         self.new_df = new_df
 
-    def get_depot_name(self):  # This function gets the depot name
-        return self.new_df.iloc[0:1, :1]
-
-    def get_depot_value(self):
-        return self.new_df.iloc[3:4, :1]
-
-    def get_depot_dev_abs(self):
-        return self.new_df.iloc[3:4, 1:2]
-
-    def get_depot_dev_per(self):
-        return self.new_df.iloc[3:4, 2:3]
-
-    def get_pos_name(self):
-        return self.new_df.iloc[6:, :1].dropna().head(-1)
-
-    def get_pos_wkn(self):
-        return self.new_df.iloc[6:, 1:2].dropna().head(-1)
-
-    def get_pos_type(self):
-        return self.new_df.iloc[6:, 2:3].dropna().head(-1)
-
-    def get_pos_shares(self):
-        return self.new_df.iloc[6:, 3:4].dropna().head(-1)
-    
-    def get_pos_ex(self):
-        return self.new_df.iloc[6:, 12:13].dropna().head(-1)
-
-    def get_pos_value(self):
-        return self.new_df.iloc[6:, 13:14].dropna().head(-1)
-    
-    def get_pos_dev_abs(self):
-        return self.new_df.iloc[6:, 14:15].dropna().head(-1)
-
-    def get_pos_dev_per(self):
-        return self.new_df.iloc[6:, 16:17].dropna().head(-1)
-
     def get_for_sorting(self):
         return self.new_df.iloc[5:].dropna()
-
-    def replace_header_w_first_row(self):
-        new_df = self.new_df.rename(columns=self.new_df.iloc[0]).drop(
-            self.new_df.index[0])
-        return new_df
-
-    def get_best_position_absolute(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1['Entwicklung absolut'].apply(lambda x: x.replace('.', ''))
-        df2 = df2.apply(lambda x: x.replace(',', '.'))
-        df1['Entwicklung absolut'] = df2
-        df1['Entwicklung absolut'] = df1['Entwicklung absolut'].astype(float)
-        df_sorted = df1.sort_values(['Entwicklung absolut'], ascending=False)
-        df_first = df_sorted.head(1)
-        df_name = df_first['Name']
-        df_att_percent = df_first['Entwicklung prozentual'].astype(str) + " %"
-        df_att_abs = df_first['Entwicklung absolut'].astype(str) + " €"
-        df_fixed = df_name + " | " + df_att_abs + " | " + df_att_percent
-        return df_fixed
-
-    # this is horrible, please future me, find a better solution.
-    def get_best_position_percentage(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1['Entwicklung prozentual'].apply(lambda x: x.replace('.', ''))
-        df2 = df2.apply(lambda x: x.replace(',', '.'))
-        df1['Entwicklung prozentual'] = df2
-        df1['Entwicklung prozentual'] = df1['Entwicklung prozentual'].astype(
-            float)
-        df_sorted = df1.sort_values(['Entwicklung prozentual'],
-                                    ascending=False)
-        df_first = df_sorted.head(1)
-        df_name = df_first['Name']
-        df_att_percent = df_first['Entwicklung prozentual'].astype(str) + " %"
-        df_att_abs = df_first['Entwicklung absolut'].astype(str) + " €"
-        df_fixed = df_name + " | " + df_att_abs + " | " + df_att_percent
-        return df_fixed
-
-
-#
-# this function will get the worst position in the portfolio depended on the absolute value (most € lost)
-
-    def get_worst_position_absolute(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1['Entwicklung absolut'].apply(lambda x: x.replace('.', ''))
-        df2 = df2.apply(lambda x: x.replace(',', '.'))
-        df1['Entwicklung absolut'] = df2
-        df1['Entwicklung absolut'] = df1['Entwicklung absolut'].astype(float)
-        df_sorted = df1.sort_values(['Entwicklung absolut'])
-        df_first = df_sorted.head(1)
-        df_name = df_first['Name']
-        df_att_percent = df_first['Entwicklung prozentual'].astype(str) + " %"
-        df_att_abs = df_first['Entwicklung absolut'].astype(str) + " €"
-        df_fixed = df_name + " | " + df_att_abs + " | " + df_att_percent
-        return df_fixed
-
-        # this function will get the worst position in the portfolio depended on the percentage value (most % lost)
-    def get_worst_position_percentage(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1['Entwicklung prozentual'].apply(lambda x: x.replace('.', ''))
-        df2 = df2.apply(lambda x: x.replace(',', '.'))
-        df1['Entwicklung prozentual'] = df2
-        df1['Entwicklung prozentual'] = df1['Entwicklung prozentual'].astype(
-            float)
-        df_sorted = df1.sort_values(['Entwicklung prozentual'])
-        df_first = df_sorted.head(1)
-        df_name = df_first['Name']
-        df_att_percent = df_first['Entwicklung prozentual'].astype(str) + " %"
-        df_att_abs = df_first['Entwicklung absolut'].astype(str) + " €"
-        df_fixed = df_name + " | " + df_att_abs + " | " + df_att_percent
-        return df_fixed
-
-    # creating a function for plotly pie chat that shows the % of the Portfolio of the positions
-    def fig_pie_poisitions_per(self):
-        lables = self.get_pos_name()
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1['Gesamtwert EUR'].apply(lambda x: x.replace('.', ''))
-        df2 = df2.apply(lambda x: x.replace(',', '.'))
-        df1['Gesamtwert EUR'] = df2
-        df1['Gesamtwert EUR'] = df1['Gesamtwert EUR'].astype(float)
-        values_of_pos = df1['Gesamtwert EUR']
-        values = (values_of_pos / sum(values_of_pos)) * 100
-        fig = go.Figure(
-            data=[go.Pie(labels=lables, values=values)])
-        return fig
-
-    # creates a function that shows the number of shares of each position in a bar graph
-    def fig_bar_positions_nr(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        fig = px.bar(data_frame=df1,
-                             x=df1['Name'],
-                             y=df1['Stück/Nominal'])
-        return fig
-
-    # is a function that shows the important bits of data from the whole DF. But in a way so you can sort it withint the dataframe.
-    def get_sorted_dataframe(self):
-        df1 = self.new_df.replace_header_w_first_row(
-            self.new_df.get_for_sorting())
-        df2 = df1.apply(lambda x: x.str.replace('.', ''))
-        df2 = df2[[
-            'Gesamtwert EUR', 'Stück/Nominal', 'Einstandskurs inkl. NK',
-            'Einstandswert', 'Veränderung Intraday', 'Entwicklung absolut',
-            'Entwicklung prozentual'
-        ]].apply(lambda x: x.str.replace(',', '.'))
-        df3 = df2.astype('float', errors='ignore')
-        df1 = pd.concat(
-            [self.get_pos_name(),
-             self.get_pos_wkn(), df3], axis=1)
-        df1 = df1.rename(columns={'Depot': 'Name', 'Inhaber': 'WKN'})
-        return df1
 
 
 class Data_Frame_ING:
@@ -179,9 +28,6 @@ class Data_Frame_ING:
 
     def get_for_sorting(self):
         return self.new_df.iloc[:].dropna()
-
-
-
 
 
 class Data_Frame_Comdirect:
@@ -203,6 +49,9 @@ body {
   }
 .css-2trqyj{
     color: black
+}
+.st-bm{
+    color: white;
 }
 p {
     color: white;
@@ -237,10 +86,12 @@ header = st.beta_container()
 # all of the below code is to build the landing page / page that comes up when Navigation -> Depot
 with header:
     st.title("Willkommen zu deinem Dashboard")
+    st.subheader("Ich hoffe ihr könnt hiermit etwas anfangen und es gibt euch einsichten die Ihr vielleicht vorher so nicht gesehen habt."
+                "Ich wüscnhe euch viel spaß hiermit. Maxi <3")
     st.text(
         "Sobald du eine CSV Datei deines Portfolios *CONSORS | ING | COMDIRECT* hochgeladen hast, kannst du hier"
         "alle wichtigen Informationen nachschauen.")
-    st.text("Bitte wähle unten aus welche Portfolios du auswerten willst.")
+    st.text("Bitte wähle unten aus welche deiner Portfolios du auswerten willst.")
     st.write("---")
     col1, col2, col3 = st.beta_columns(3)
     with col1:
@@ -251,10 +102,8 @@ with header:
         ing = st.checkbox("ING", key=2)
     with col3:
         st.write("Comdirect")
-        comdirect =  st.checkbox("", key=3)
+        comdirect =  st.checkbox("COMDIRECT", key=3)
     st.write("---")
-# df_final_consors = pd.DataFrame(columns=["Name", "ISIN", "Art", "Stück", "Gesamtwert", "Stückpreis", "Entwicklung Absolut(Aktie)", "Entwicklung Prozentual(Aktie)", "Handelsplatz"])
-
 
 #---------------------here are all the functions used------------------------------------
 
@@ -268,7 +117,6 @@ def get_consors_df_to_merge():
     return df_for_merge_consors
 
 
-
 def get_ing_df_to_merge():
     df1 = Data_Frame_ING.get_for_sorting(df_ign)
     df_size = df1.drop(columns=["Zeit", "Währung", "Währung.1", "Währung.2", "Währung.3", "Währung.4", "Einstandskurs", "Einstandswert"], axis=1)
@@ -277,7 +125,7 @@ def get_ing_df_to_merge():
     df_for_merge_ing = df_for_merge_ing.apply(lambda x: x.str.replace('Stück', 'Aktie'))
     return df_for_merge_ing
 
-def get_comdirect_to_merge():
+def get_comdirect_df_to_merge():
     df1 = Data_Frame_Comdirect.get_for_sorting(df_comdirect)
     # df1_header = df1.rename(columns=df1.iloc[0]).drop(df1.index[0])
     df1_com = df1.drop(columns=[ "Kaufwert in EUR", "Währung", "Notizen", "Diff. abs", "Diff. %", "Kaufkurs in EUR", "Datum",  "Zeit", "Unnamed: 17"], axis=1)
@@ -288,13 +136,9 @@ def get_comdirect_to_merge():
     # df1_com = df1_com.dropna()
     return df_to_merge_comdirect
 
-def sort_df(df):
-    df = df[["Name", "WKN/ISIN", "Art", "Stück", "Gesamtwert", "Stückpreis", "Entwicklung Absolut", "Entwicklung Prozentual", "Handelsplatz"]]
-    return df
-
 
 def join_all_df():
-    df_merged_all = pd.concat([get_comdirect_to_merge(), get_consors_df_to_merge(), get_ing_df_to_merge()], ignore_index=True)
+    df_merged_all = pd.concat([get_comdirect_df_to_merge(), get_consors_df_to_merge(), get_ing_df_to_merge()], ignore_index=True)
     df_merged_all = df_merged_all[["Name", "WKN/ISIN", "Art", "Stück", "Gesamtwert", "Stückpreis", "Entwicklung Absolut", "Entwicklung Prozentual", "Handelsplatz"]]
     return df_merged_all
 
@@ -306,13 +150,13 @@ def join_consors_ing():
 
 
 def join_consors_comdirect():
-    df_merged_consors_comdirect = pd.concat([get_consors_df_to_merge(), get_comdirect_to_merge()])
+    df_merged_consors_comdirect = pd.concat([get_consors_df_to_merge(), get_comdirect_df_to_merge()])
     df_merged_consors_comdirect = df_merged_consors_comdirect[["Name", "WKN/ISIN", "Art", "Stück", "Gesamtwert", "Stückpreis", "Entwicklung Absolut", "Entwicklung Prozentual", "Handelsplatz"]]
     return df_merged_consors_comdirect
 
 
 def join_ing_comdirect():
-    df_merged_ing_comdirect = pd.concat([get_comdirect_to_merge(), get_ing_df_to_merge()])
+    df_merged_ing_comdirect = pd.concat([get_comdirect_df_to_merge(), get_ing_df_to_merge()])
     df_merged_ing_comdirect = df_merged_ing_comdirect[["Name", "WKN/ISIN", "Art", "Stück", "Gesamtwert", "Stückpreis", "Entwicklung Absolut", "Entwicklung Prozentual", "Handelsplatz"]]
     return df_merged_ing_comdirect
 
@@ -347,162 +191,700 @@ def convert_float_into_str(value):
     return value
 
 # This function will spit out the total portfolio value of all 3 portfolios combined
-def get_depot_value_total():
-    df = join_all_df()
+def get_depot_value_total(df):
     df_float = make_column_into_float(df)
     df_value = get_total_value_portfolio(df_float)
     df_str = convert_float_into_str(df_value)
     return df_str
 
 # this function calculates the total absolute (VALUE) growth of all 3 portfolios
-def get_growth_abs_total():
-    df = join_all_df()
+def get_growth_abs_total(df):
     df_float = make_column_into_float(df)
     df_value = get_total_growth_abs_portfolio(df_float)
     df_str = convert_float_into_str(df_value)
     return df_str
 
-def get_growth_per_total():
-    df = join_all_df()
-    df_float = make_column_into_float(df)
-    df_value = get_total_growth_per_portfolio(df_float)
+def get_growth_per_portfolio(df):
+    df1 = make_column_into_float(df)
+    df_value = ((get_total_growth_abs_portfolio(df1) / get_total_value_portfolio(df1)) * 100).round(2)
     df_str = convert_float_into_str(df_value)
     return df_str
 
-# This function creates a piec_chart that shows the % of each position based on the value of that position compared to the total value
-def pie_position_dist_per():
-    df_float = make_column_into_float(join_all_df())
+
+def pie_position_dist_per(df):
+    df_float = make_column_into_float(df)
     a = df_float['Gesamtwert'] / sum(df_float["Gesamtwert"])
     df_float.loc[a < 0.01, 'Name'] = "Other"
-    fig = px.pie(df_float, values="Gesamtwert", names="Name")
+    fig = px.pie(df_float, values="Gesamtwert", names="Name", template="plotly_dark")
     return fig
 
-
+def bar_position_dist_share(df):
+    df_float = make_column_into_float(df)
+    a = df_float['Stück'] / sum(df_float["Stück"])
+    df_float.loc[a < 0.01, 'Name'] = "Other"
+    fig = px.pie(df_float, values="Stück", names="Name", template="plotly_dark")
+    return fig
 
 # This will delete the header and index of said dataframe AND convert it to a string.
-def no_header_no_index(df):
-    df_new = df.to_string(index=None, header=None)
-    return df_new
-    # df_sorted = df_float.sort_values(by="Gesamtwert", ascending=False)
-    # values = (df_float["Gesamtwert"] / sum(df_float["Gesamtwert"])) * 100
-    # values_fixed = df_sorted(10)
 
-# this will replace the header of the given Dataframe with the first row of said dataframe
-def replace_header_w_first_row(self):
-    new_df = self.new_df.rename(columns=self.new_df.iloc[0]).drop(
-        self.new_df.index[0])
-    return new_df
+def get_total_shares(df):
+    df1 = make_column_into_float(df)
+    total_value = sum(df1["Stück"])
+    total_rounded = round(total_value, 3)
+    return total_rounded
 
-
-# # this will turn any single value into a float type.
-# def fig_pie_poisitions_per(df):
-#     values_of_pos = df1['Gesamtwert EUR']
-#     values = (values_of_pos / sum(values_of_pos)) * 100
-#     fig = go.Figure(
-#         data=[go.Pie(labels=lables, values=values)])
-#     return fig
+def get_avrg_value_per_share(df):
+    df_float = make_column_into_float(df)
+    df_value = get_total_value_portfolio(df_float)
+    avrg_value = df_value / get_total_shares(df)
+    avrg_value = avrg_value.round(2)
+    return avrg_value
 
 
+def get_avrg_growth_per_share_per(df):
+    df_float = make_column_into_float(df)
+    df_growrth = get_total_growth_per_portfolio(df_float)
+    avrg_share =  get_avrg_value_per_share(df)
+    avrg_growth = df_growrth / avrg_share
+    avrg_growth = avrg_growth.round(2)
+    return avrg_growth
+
+def get_avrg_growth_per_share_abs(df):
+    df_float = make_column_into_float(df)
+    df_abs = get_total_growth_abs_portfolio(df_float)
+    avrg_share =  get_avrg_value_per_share(df)
+    avrg_growth = df_abs / avrg_share
+    avrg_growth = avrg_growth.round(2)
+    return avrg_growth
+
+# gets the best position based on value growth if all 3 potfolios are uploaded
+def get_best_pos_val(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Absolut", ascending=False)
+    df_sorted = df_sorted.head(1)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Absolut"].astype('str')
+    df_fixed = df_name + " | " + df_value + " €"
+    df_fixed = df_fixed.to_string(index=None)
+    return df_fixed 
+
+def get_best_pos_per(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Prozentual", ascending=False)
+    df_sorted = df_sorted.head(1)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Prozentual"].astype('str')
+    df_fixed = df_name + " | " + df_value + " %"
+    df_fixed = df_fixed.to_string(index=None)
+    return df_fixed 
+
+def get_worst_pos_val(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Absolut")
+    df_sorted = df_sorted.head(1)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Absolut"].astype('str')
+    df_fixed = df_name + " | " + df_value + " €"
+    df_fixed = df_fixed.to_string(index=None)
+    return df_fixed 
+
+def get_worst_pos_per(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Prozentual")
+    df_sorted = df_sorted.head(1)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Prozentual"].astype('str')
+    df_fixed = df_name + " | " + df_value + " %"
+    df_fixed = df_fixed.to_string(index=None)
+    return df_fixed 
 
 
+def get_10best_pos_abs(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Absolut", ascending=False)
+    df_sorted = df_sorted.head(10)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Absolut"].astype('str')
+    df_fixed = df_name + " | " + df_value + " €"
+    df_fixed = df_fixed.rename("Top 10 Aktien nach €")
+    df_fixed = df_fixed.reset_index(drop=True)
+    return df_fixed 
 
-#this will turn a column of the dataframe into float type.
-# def turn_str_into_float(col):
-#     df1 = replace_header_w_first_row(
-#         classes.Data_Frame_Consors.get_for_sorting())
-#     df2 = df2[col].apply(lambda x: x.replace(',', '.'))
-#     df1[col] = df2
-#     df1[col] = df1[col].astype(float)
-#     return df1[col]
+def get_10best_pos_per(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Prozentual", ascending=False)
+    df_sorted = df_sorted.head(10)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Prozentual"].astype('str')
+    df_fixed = df_name + " | " + df_value + " %"
+    df_fixed = df_fixed.rename("Top 10 Aktien nach %")
+    df_fixed = df_fixed.reset_index(drop=True)
+    return df_fixed 
+
+def get_10worst_pos_abs(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Absolut")
+    df_sorted = df_sorted.head(10)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Absolut"].astype('str')
+    df_fixed = df_name + " | " + df_value + " €"
+    df_fixed = df_fixed.rename("Top 10 Aktien nach €")
+    df_fixed = df_fixed.reset_index(drop=True)
+    return df_fixed 
+
+def get_10worst_pos_per(df):
+    df_float = make_column_into_float(df)
+    df_sorted = df_float.sort_values("Entwicklung Prozentual")
+    df_sorted = df_sorted.head(10)
+    df_name = df_sorted["Name"]
+    df_value = df_sorted["Entwicklung Prozentual"].astype('str')
+    df_fixed = df_name + " | " + df_value + " %"
+    df_fixed = df_fixed.rename("Top 10 Aktien nach %")
+    df_fixed = df_fixed.reset_index(drop=True)
+    return df_fixed 
 
 
 
 if consors and ing and comdirect:
-        col1, col2, col3 = st.beta_columns(3)
-        with col1:
-            st.header("Depotwert")
-            st.subheader(get_depot_value_total() + " €")
-        with col2:
-            st.header("Depotentwicklung €")
-            st.subheader(get_growth_abs_total() + " €")
-        with col3:
-            st.header("Depotentwicklung %")
-            st.subheader(get_growth_per_total() + " %")
-        st.write(pie_position_dist_per())
-
-
-
-
-
-
-
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(join_all_df()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(join_all_df()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(join_all_df()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(join_all_df()))
+        with col5:
+            st.subheader(get_best_pos_per(join_all_df()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(join_all_df()))
+        with col7:
+            st.subheader(get_worst_pos_per(join_all_df()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(join_all_df()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(join_all_df()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(join_all_df()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(join_all_df()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(join_all_df()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(join_all_df()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(join_all_df()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(join_all_df())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(join_all_df())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(join_all_df())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(join_all_df())
 
 
 if consors and ing and not comdirect:
-    pass
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(join_consors_ing()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(join_consors_ing()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(join_consors_ing()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(join_consors_ing()))
+        with col5:
+            st.subheader(get_best_pos_per(join_consors_ing()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(join_consors_ing()))
+        with col7:
+            st.subheader(get_worst_pos_per(join_consors_ing()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(join_consors_ing()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(join_consors_ing()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(join_consors_ing()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(join_consors_ing()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(join_consors_ing()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(join_consors_ing()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(join_consors_ing()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(join_consors_ing())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(join_consors_ing())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(join_consors_ing())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(join_consors_ing())
+
 
 if consors and comdirect and not ing:
-    pass
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(join_consors_comdirect()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(join_consors_comdirect()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(join_consors_comdirect()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(join_consors_comdirect()))
+        with col5:
+            st.subheader(get_best_pos_per(join_consors_comdirect()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(join_consors_comdirect()))
+        with col7:
+            st.subheader(get_worst_pos_per(join_consors_comdirect()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(join_consors_comdirect()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(join_consors_comdirect()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(join_consors_comdirect()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(join_consors_comdirect()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(join_consors_comdirect()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(join_consors_comdirect()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(join_consors_comdirect()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(join_consors_comdirect())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(join_consors_comdirect())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(join_consors_comdirect())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(join_consors_comdirect())
+
 
 if ing and comdirect and not consors:
-    pass
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(join_ing_comdirect()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(join_ing_comdirect()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(join_ing_comdirect()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(join_ing_comdirect()))
+        with col5:
+            st.subheader(get_best_pos_per(join_ing_comdirect()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(join_ing_comdirect()))
+        with col7:
+            st.subheader(get_worst_pos_per(join_ing_comdirect()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(join_ing_comdirect()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(join_ing_comdirect()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(join_ing_comdirect()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(join_ing_comdirect()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(join_ing_comdirect()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(join_ing_comdirect()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(join_ing_comdirect()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(join_ing_comdirect())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(join_ing_comdirect())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(join_ing_comdirect())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(join_ing_comdirect())
 
-if consors and not ing and comdirect:
-    pass
 
-if ing and not consors and comdirect:
-    pass
+if consors and (not ing) and (not comdirect):
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(get_consors_df_to_merge()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(get_consors_df_to_merge()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(get_consors_df_to_merge()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(get_consors_df_to_merge()))
+        with col5:
+            st.subheader(get_best_pos_per(get_consors_df_to_merge()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(get_consors_df_to_merge()))
+        with col7:
+            st.subheader(get_worst_pos_per(get_consors_df_to_merge()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(get_consors_df_to_merge()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(get_consors_df_to_merge()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(get_consors_df_to_merge()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(get_consors_df_to_merge()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(get_consors_df_to_merge()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(get_consors_df_to_merge()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(get_consors_df_to_merge()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(get_consors_df_to_merge())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(get_consors_df_to_merge())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(get_consors_df_to_merge())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(get_consors_df_to_merge())
 
-if comdirect and not ing and consors:
-    pass
-# ----------------------------------------------------------------------------------------------------------------------
-#     # this is the display functions for "Protfolioname / Gesamtdepotwert / Entwicklung...
+if ing and (not consors) and (not comdirect):
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(get_ing_df_to_merge()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(get_ing_df_to_merge()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(get_ing_df_to_merge()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(get_ing_df_to_merge()))
+        with col5:
+            st.subheader(get_best_pos_per(get_ing_df_to_merge()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(get_ing_df_to_merge()))
+        with col7:
+            st.subheader(get_worst_pos_per(get_ing_df_to_merge()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(get_ing_df_to_merge()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(get_ing_df_to_merge()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(get_ing_df_to_merge()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(get_ing_df_to_merge()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(get_ing_df_to_merge()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(get_ing_df_to_merge()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(get_ing_df_to_merge()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(get_ing_df_to_merge())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(get_ing_df_to_merge())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(get_ing_df_to_merge())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(get_ing_df_to_merge())
 
 
-
-# #     # ----------------------------------------------------------------------------------------------------------------------
-# #     # display functions for best / worst stock
-# with features2:
-#     col4, col5 = st.beta_columns(2)
-#     best_share = col4.beta_expander("Beste Aktie")
-#     with best_share:
-#         st.subheader(
-#             (no_header_no_index(classes.get_best_position_absolute())))
-#         st.subheader(
-#             (no_header_no_index(df.get_best_position_percentage())))
-#     worst_share = col5.beta_expander("Schlechteste Aktie")
-#     with worst_share:
-#         st.subheader((no_header_no_index(get_worst_position_absolute())))
-#         st.subheader(
-#             (no_header_no_index(get_worst_position_percentage())))
-#     col4.write("---")
-#     col5.write('---')
-# with features3:
-#     portfolio_per = col4.beta_expander("% der Position vom Portfolio")
-#     with portfolio_per:
-#         st.plotly_chart(fig_pie_poisitions_per())
-#     portfolio_shares = col5.beta_expander("Stückanzahl pro Position")
-#     with portfolio_shares:
-#         st.plotly_chart(fig_bar_positions_nr())
-#     col5.write('---')
-#     col4.write("---")
-# with features4:
-#     all_data = st.beta_expander("Alles im Überblick")
-#     with all_data:
-#         st.write(get_sorted_dataframe())
-
-#------------here we define the rest of the programm----------------------
-
-# st.write(df_consors)
-# st.write(df_ign)
-# st.write(df_comdirect)
-
-# st.write(get_consors_df_to_merge())
-# st.write(get_ing_df_to_merge())
-# st.write(get_comdirect_to_merge())
-# st.write(make_column_into_float(join_all_df()))
-# st.header(get_total_value_portfolio(make_column_into_float(get_comdirect_to_merge())))
-# st.write(Data_Frame_Consors.get_for_sorting(df_consors))
-# st.write(Data_Frame_ING.get_for_sorting(df_ign))
-# st.write(Data_Frame_Comdirect.get_for_sorting(df_comdirect))
-
+if comdirect and (not ing) and (not consors):
+    col1, col2, col3 = st.beta_columns(3)
+    with col1:
+        st.header("Depotwert")
+        st.subheader(get_depot_value_total(get_comdirect_df_to_merge()) + " €")
+    with col2:
+        st.header("Depotentwicklung €")
+        st.subheader(get_growth_abs_total(get_comdirect_df_to_merge()) + " €")
+    with col3:
+        st.header("Depotentwicklung %")
+        st.subheader(get_growth_per_portfolio(get_comdirect_df_to_merge()) + " %")
+    st.write("---")
+    ba = st.beta_expander("Beste Aktien")
+    with ba:
+        col4, col5 = st.beta_columns(2)
+        with col4:
+            st.subheader(get_best_pos_val(get_comdirect_df_to_merge()))
+        with col5:
+            st.subheader(get_best_pos_per(get_comdirect_df_to_merge()))
+    wa = st.beta_expander("Schlechteste Aktien")
+    with wa:
+        col6, col7 = st.beta_columns(2)
+        with col6:
+            st.subheader(get_worst_pos_val(get_comdirect_df_to_merge()))
+        with col7:
+            st.subheader(get_worst_pos_per(get_comdirect_df_to_merge()))
+    col8, col9, col10, col11 = st.beta_columns(4)
+    with col8:
+        top10val = st.beta_expander("Beste 10 Aktien €")
+        with top10val:
+            for i in get_10best_pos_abs(get_comdirect_df_to_merge()):
+                st.write(i)
+    with col9:
+        top10per = st.beta_expander("Beste 10 Aktien %")
+        with top10per:
+            for i in get_10best_pos_per(get_comdirect_df_to_merge()):
+                st.write(i)
+    with col10:
+        bad10val = st.beta_expander("Schlechteste 10 Aktien €")
+        with bad10val:
+            for i in get_10worst_pos_abs(get_comdirect_df_to_merge()):
+                st.write(i)
+    with col11:
+        bad10per = st.beta_expander("Schlechteste 10 Aktien %")
+        with bad10per:
+            for i in get_10worst_pos_per(get_comdirect_df_to_merge()):
+                st.write(i)
+    col12, col13 = st.beta_columns(2)
+    with col12:
+        ver_per = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen am Wert")
+        with ver_per:
+            st.write(pie_position_dist_per(get_comdirect_df_to_merge()))
+    with col13:
+        ver_share = st.beta_expander("Anteil der Aktien am Gesamtdepot gemessen nach Stück")
+        with ver_share:
+            st.write(bar_position_dist_share(get_comdirect_df_to_merge()))
+    col14, col15, col16, col17 = st.beta_columns(4)
+    with col14:
+        stk1 = st.beta_expander("Anteile Gesamt")
+        with stk1:
+            st.subheader(get_total_shares(get_comdirect_df_to_merge()))
+    with col15:
+        stk2 = st.beta_expander("Durschnitspreis pro Anteil")
+        with stk2:
+            st.subheader(convert_float_into_str(get_avrg_value_per_share(get_comdirect_df_to_merge())) + " €")
+    with col16:
+        stk3 = st.beta_expander("Durschnitsanstieg pro Aktie €")
+        with stk3:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_abs(get_comdirect_df_to_merge())) + " €")
+    with col17:
+        stk4 = st.beta_expander("Durschnitsanstieg pro Aktie %")
+        with stk4:
+            st.subheader(convert_float_into_str(get_avrg_growth_per_share_per(get_comdirect_df_to_merge())) + " %")
+    df = st.beta_expander("Datentabelle Anzeigen")
+    with df:
+        st.write(get_comdirect_df_to_merge())
