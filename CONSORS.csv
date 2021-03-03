@@ -1,0 +1,22 @@
+﻿Depot;Inhaber;Exportdatum;;;;;;;;;;;;;;
+123123;Testname;01.02.21 12:50;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;
+Gesamtdepotwert (EUR);Entwicklung absolut (EUR);Entwicklung prozentual;;;;;;;;;;;;;;
+3.639,11;205,34;5,98;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;
+Name;WKN;Gattung;Stück/Nominal;Einstandskurs inkl. NK;Währung/Prozent;Einstandswert;Währung/Prozent;Veränderung Intraday;Kurs;Währung/Prozent;Datum/Zeit;Handelsplatz;Gesamtwert EUR;Entwicklung absolut;Währung/Prozent;Entwicklung prozentual
+ABBVIE INC. DL-,01;A1J84E;Aktie;0,584;85,618;EUR;50;EUR;1,189;85,99;EUR;01.02.2021 12:19:24;Stuttgart;50,22;0,22;EUR;0,43
+BLACKROCK CL. A DL -,01;928193;Aktie;0,103;484,121;EUR;50;EUR;2,147;589,9;EUR;01.02.2021 12:03:39;Tradegate;60,92;10,92;EUR;21,85
+BRISTOL-MYERS SQUIBBDL-10;850501;Aktie;0,974;51,326;EUR;50;EUR;-0,155;51,51;EUR;01.02.2021 12:11:45;Stuttgart;50,18;0,18;EUR;0,36
+DIAGEO PLC LS-,28935185;851247;Aktie;11,066;32,009;EUR;354,22;EUR;-1,191;33;EUR;01.02.2021 11:48:40;Stuttgart;365,18;10,96;EUR;3,09
+JPMORGAN CHASE DL 1;850628;Aktie;3,633;91,407;EUR;332,09;EUR;1,963;107,7;EUR;01.02.2021 12:14:37;Tradegate;391,28;59,19;EUR;17,82
+LTC PTIES INC. DL-,01;884625;Aktie;1,475;33,892;EUR;50;EUR;-0,775;33,06;EUR;01.02.2021 11:24:33;Stuttgart;48,77;-1,23;EUR;-2,46
+MASTERCARD INC.A DL-,0001;A0F602;Aktie;1,286;272,329;EUR;350,28;EUR;1,458;264,4;EUR;01.02.2021 12:16:32;Tradegate;340,08;-10,2;EUR;-2,91
+OMEGA HEALTHC. INV. DL-10;890454;Aktie;1,876;26,658;EUR;50;EUR;2,315;30,46;EUR;01.02.2021 11:04:54;Tradegate;57,13;7,13;EUR;14,26
+PHILIP MORRIS INTL INC.;A0NDBJ;Aktie;7,757;67,923;EUR;526,89;EUR;1,082;66,31;EUR;01.02.2021 12:01:01;Düsseldorf;514,37;-12,52;EUR;-2,38
+TEXAS INSTR. DL 1;852654;Aktie;3,079;117,589;EUR;362,07;EUR;2,213;139,5;EUR;01.02.2021 12:03:21;Tradegate;429,54;67,47;EUR;18,63
+WELLS FARGO + CO.DL 1,666;857949;Aktie;53,151;23,673;EUR;1.258,22;EUR;1,953;25,05;EUR;01.02.2021 12:06:15;Tradegate;1.331,44;73,22;EUR;5,82
+;;;;;;;;;;;;;;;;
+Gesamtdepotwert (EUR);3.639,11;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;
