@@ -19,7 +19,7 @@ You can either host it on your local machine, or access the hosted version here:
 
 -----------------------------------------------------------------------------
 
-https://share.streamlit.io/maximiliansoeren/streamlit_apps/main.py
+https://share.streamlit.io/maximiliansoeren/portfolio-analyzer/main.py
 
 -----------------------------------------------------------------------------
 
